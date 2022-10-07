@@ -22,7 +22,7 @@ class _TextBoxState extends State<TextBox> {
         child: Padding(
             padding: const EdgeInsets.all(5),
             child: Text(
-              'working',
+              'not working',
               textAlign: widget.textAlign,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             )),
