@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main_page.dart';
+import 'package:libserialport/libserialport.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,11 +10,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.green),
-      home: const SafeArea(
-        child: RootPage(),
-      ),
-    );
+    List<String> availablePort = SerialPort.availablePorts;
+    print('Available Ports: $availablePort');
+    SerialPort arduino = SerialPort('COM7');
+    arduino.openReadWrite();
+    try {
+      SerialPortReader arduino_reader = SerialPortReader(arduino);
+
+      Stream<String> stream_data = arduino_reader.stream.map((data) {
+        return String.fromCharCodes(data);
+      });
+      stream_data.listen((data) {
+        print(data);
+      });
+      while (true) {}
+    } on SerialPortError catch (err, _) {
+      print(SerialPort.lastError);
+      arduino.close();
+    }
+    return Container();
   }
 }
