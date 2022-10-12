@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:image_picker/image_picker.dart';
-import 'text_box.dart';
+import 'package:flutter_libserialport/flutter_libserialport.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -48,26 +47,49 @@ class _ChatHomeState extends State<ChatHome> {
   }
 
   void _handelAttachmentPressed() {
+    var availablePorts = [];
+    setState(() => availablePorts = SerialPort.availablePorts);
     showDialog(
         context: context,
         builder: (context) {
           return Dialog(
-            child: SafeArea(
-              child: ListView(
-                shrinkWrap: true,
-                children: const <Widget>[
-                  TextBox(
-                    textAlign: TextAlign.left,
-                    boxColor: Colors.red,
-                  ),
-                  TextBox(
-                    textAlign: TextAlign.right,
-                    boxColor: Colors.cyan,
-                  ),
-                ],
-              ),
+            child: ListView(
+              children: [
+                for (final address in availablePorts)
+                  Builder(builder: (context) {
+                    final port = SerialPort(address);
+                    print(port);
+                    return ExpansionTile(
+                      title: Text(address),
+                      children: [
+                        CardListTile('Description', port.description),
+                        CardListTile('Manufacturer', port.manufacturer),
+                        CardListTile('Product Name', port.productName),
+                        CardListTile('Serial Number', port.serialNumber),
+                        CardListTile('MAC Address', port.macAddress),
+                      ],
+                    );
+                  }),
+              ],
             ),
           );
         });
+  }
+}
+
+class CardListTile extends StatelessWidget {
+  final String name;
+  final String? value;
+
+  CardListTile(this.name, this.value);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(value ?? 'N/A'),
+        subtitle: Text(name),
+      ),
+    );
   }
 }
