@@ -58,22 +58,38 @@ class _ChatHomeState extends State<ChatHome> {
                 for (final address in availablePorts)
                   Builder(builder: (context) {
                     final port = SerialPort(address);
-                    print(port);
-                    return ExpansionTile(
-                      title: Text(address),
-                      children: [
-                        CardListTile('Description', port.description),
-                        CardListTile('Manufacturer', port.manufacturer),
-                        CardListTile('Product Name', port.productName),
-                        CardListTile('Serial Number', port.serialNumber),
-                        CardListTile('MAC Address', port.macAddress),
-                      ],
-                    );
+                    return Text('$port.address');
                   }),
               ],
             ),
           );
         });
+  }
+}
+
+class Device extends StatefulWidget {
+  final device;
+  const Device({
+    super.key,
+    required this.device,
+  });
+
+  @override
+  State<Device> createState() => _DeviceState();
+}
+
+class _DeviceState extends State<Device> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.all(16.0),
+        textStyle: const TextStyle(fontSize: 20),
+      ),
+      onPressed: () {},
+      child: const Text('hi'),
+    );
   }
 }
 
