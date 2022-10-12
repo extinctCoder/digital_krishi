@@ -1,33 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:libserialport/libserialport.dart';
+import 'console/chat_home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MainApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<String> availablePort = SerialPort.availablePorts;
-    print('Available Ports: $availablePort');
-    SerialPort arduino = SerialPort('COM7');
-    arduino.openReadWrite();
-    try {
-      SerialPortReader arduino_reader = SerialPortReader(arduino);
-
-      Stream<String> stream_data = arduino_reader.stream.map((data) {
-        return String.fromCharCodes(data);
-      });
-      stream_data.listen((data) {
-        print(data);
-      });
-      while (true) {}
-    } on SerialPortError catch (err, _) {
-      print(SerialPort.lastError);
-      arduino.close();
-    }
-    return Container();
+    return MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.lightBlue),
+      home: const SafeArea(child: ChatHome()),
+    );
   }
 }
