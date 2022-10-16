@@ -38,6 +38,7 @@ dependencies:
   flutter_libserialport: ^0.3.0
   flutter_chat_ui:
   image_picker:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:

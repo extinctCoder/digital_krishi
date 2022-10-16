@@ -58,7 +58,7 @@ class _ChatHomeState extends State<ChatHome> {
                 for (final address in availablePorts)
                   Builder(builder: (context) {
                     final port = SerialPort(address);
-                    return Text('$port.address');
+                    return Device(device: port);
                   }),
               ],
             ),
@@ -68,7 +68,7 @@ class _ChatHomeState extends State<ChatHome> {
 }
 
 class Device extends StatefulWidget {
-  final device;
+  final SerialPort device;
   const Device({
     super.key,
     required this.device,
@@ -82,30 +82,8 @@ class _DeviceState extends State<Device> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.all(16.0),
-        textStyle: const TextStyle(fontSize: 20),
-      ),
       onPressed: () {},
-      child: const Text('hi'),
-    );
-  }
-}
-
-class CardListTile extends StatelessWidget {
-  final String name;
-  final String? value;
-
-  CardListTile(this.name, this.value);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        title: Text(value ?? 'N/A'),
-        subtitle: Text(name),
-      ),
+      child: Text('$widget.device'),
     );
   }
 }
