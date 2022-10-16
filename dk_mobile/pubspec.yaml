@@ -39,6 +39,7 @@ dependencies:
   flutter_chat_ui:
   image_picker:
   permission_handler:
+  serial_port_flutter:
 
 dev_dependencies:
   flutter_test:

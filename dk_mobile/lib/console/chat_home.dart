@@ -58,32 +58,14 @@ class _ChatHomeState extends State<ChatHome> {
                 for (final address in availablePorts)
                   Builder(builder: (context) {
                     final port = SerialPort(address);
-                    return Device(device: port);
+                    return TextButton(
+                      onPressed: () {},
+                      child: Text('$port.address'),
+                    );
                   }),
               ],
             ),
           );
         });
-  }
-}
-
-class Device extends StatefulWidget {
-  final SerialPort device;
-  const Device({
-    super.key,
-    required this.device,
-  });
-
-  @override
-  State<Device> createState() => _DeviceState();
-}
-
-class _DeviceState extends State<Device> {
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {},
-      child: Text('$widget.device'),
-    );
   }
 }
