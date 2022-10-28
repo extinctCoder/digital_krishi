@@ -1,11 +1,13 @@
 // ignore_for_file: avoid_print, library_private_types_in_public_api
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:usb_serial/transaction.dart';
 import 'package:usb_serial/usb_serial.dart';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(const MyApp());
 
@@ -19,6 +21,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   UsbPort? _port;
   String _status = "Idle";
+  String _data = "";
+  bool _first = true;
   List<Widget> _ports = [];
   final List<Widget> _serialData = [];
 
@@ -73,6 +77,27 @@ class _MyAppState extends State<MyApp> {
 
     _subscription = _transaction!.stream.listen((String line) {
       setState(() {
+        if (_first) {
+          _first = false;
+        } else {
+          if (_data == "") {
+            _data = line;
+            print(_data);
+            http.post(
+              Uri.parse('http://192.168.88.172:8000/api/'),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, String>{
+                'data': _data,
+              }),
+            );
+          } else if (_data == 'Nitrogen: 255' ||
+              _data == 'Phosphorous: 255' ||
+              _data == 'Potassium: 255') {
+            _data = "";
+          }
+        }
         _serialData.add(Text(line));
         if (_serialData.length > 20) {
           _serialData.removeAt(0);
@@ -136,7 +161,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        title: const Text('USB Serial Plugin example app'),
+        title: const Text('digital krishi prof of concept v 5.01'),
       ),
       body: Center(
           child: Column(children: <Widget>[
