@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, library_private_types_in_public_api
+
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -5,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:usb_serial/transaction.dart';
 import 'package:usb_serial/usb_serial.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -16,13 +20,13 @@ class _MyAppState extends State<MyApp> {
   UsbPort? _port;
   String _status = "Idle";
   List<Widget> _ports = [];
-  List<Widget> _serialData = [];
+  final List<Widget> _serialData = [];
 
   StreamSubscription<String>? _subscription;
   Transaction<String>? _transaction;
   UsbDevice? _device;
 
-  TextEditingController _textController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
 
   Future<bool> _connectTo(device) async {
     _serialData.clear();
@@ -90,11 +94,11 @@ class _MyAppState extends State<MyApp> {
     }
     print(devices);
 
-    devices.forEach((device) {
+    for (var device in devices) {
       _ports.add(ListTile(
-          leading: Icon(Icons.usb),
+          leading: const Icon(Icons.usb),
           title: Text(device.productName!),
-          subtitle: Text(device.manufacturerName!),
+          // subtitle: Text(device.manufacturerName!),
           trailing: ElevatedButton(
             child: Text(_device == device ? "Disconnect" : "Connect"),
             onPressed: () {
@@ -103,7 +107,7 @@ class _MyAppState extends State<MyApp> {
               });
             },
           )));
-    });
+    }
 
     setState(() {
       print(_ports);
@@ -137,7 +141,7 @@ class _MyAppState extends State<MyApp> {
       body: Center(
           child: Column(children: <Widget>[
         Text(
-            _ports.length > 0
+            _ports.isNotEmpty
                 ? "Available Serial Ports"
                 : "No serial devices available",
             style: Theme.of(context).textTheme.headline6),
@@ -147,7 +151,7 @@ class _MyAppState extends State<MyApp> {
         ListTile(
           title: TextField(
             controller: _textController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Text To Send',
             ),
